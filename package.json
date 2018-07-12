@@ -12,7 +12,7 @@
     "url": "git+https://github.com/nha/geodb-nodejs-sample.git"
   },
   "dependencies": {
-    "geodb":"0.0.1"
+    "geodb": "https://geodb.io/vendors/geodb/js/geodb.tgz"
   },
   "keywords": [
     "geodb",
