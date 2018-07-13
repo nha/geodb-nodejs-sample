@@ -51,8 +51,11 @@ const subscribe = function subscribe() {
 };
 
 geodb.on('connect', (evt) => {
-  if(evt.authStatus.status === 'authenticated') {
-    setInterval(publish, 1000);
+  console.log('Connected');
+
+  if(evt[1].auth.status === 'authenticated') {
+    console.log('Publishing regularly some data');
+    setInterval(publish, 2500);
     subscribe();
   } else {
     console.log('Check env variables');
@@ -69,6 +72,7 @@ geodb.on('disconnect', (evt) => {
 
 geodb.connect({userToken: USER_TOKEN,
                apiKey: API_KEY});
+console.log('Connecting...');
 
 
 const describe = function describe () {
