@@ -103,4 +103,8 @@ test('geodb disconnect', async t => {
     !geodb.connectionState()['open?'],
     'should be disconnected after disconnection',
   )
+
+  // I feel like this is cheating :{
+  t.end()
+  if (typeof process !== 'undefined') process.exit()
 })
