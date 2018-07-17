@@ -67,7 +67,8 @@ geodb.on('error', (evt) => {
 });
 
 geodb.on('disconnect', (evt) => {
-  console.log('disconnect', evt);
+  console.log('Disconnected', evt);
+  process.exit();
 });
 
 geodb.connect({userToken: USER_TOKEN,
@@ -83,3 +84,9 @@ const describe = function describe () {
 };
 
 setInterval(describe, 5000);
+
+
+setTimeout(() => {
+  console.log('Disconnecting!');
+  geodb.disconnect();
+}, 10000);
