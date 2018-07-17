@@ -4,8 +4,8 @@ const webpack = require('webpack')
 module.exports = {
   entry: {
     index: [
-      path.join(__dirname, './index.js'),
-      path.join(__dirname, './index.html'),
+      path.join(__dirname, './test.js'),
+      path.join(__dirname, './test.html'),
     ],
   },
 
@@ -33,7 +33,7 @@ module.exports = {
         use: [
           {
             loader: 'file-loader',
-            options: { name: '[name].[ext]' },
+            options: {name: 'index.html'},
           },
         ],
       },

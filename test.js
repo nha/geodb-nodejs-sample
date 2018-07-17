@@ -3,8 +3,10 @@ const test_ = require('tape')
 const test = test_.default || test_
 
 const geodb = require('geodb').api
-const key = require('./key')
 require('websocket')
+
+const GEODB_USER_TOKEN = process.env.GEODB_USER_TOKEN
+const GEODB_API_KEY = process.env.GEODB_API_KEY
 
 test('geodb connect', t => {
   geodb.init({
@@ -24,8 +26,8 @@ test('geodb connect', t => {
   t.pass('init')
 
   geodb.connect({
-    userToken: key.GEODB_USER_TOKEN,
-    apiKey: key.GEODB_API_KEY,
+    userToken: GEODB_USER_TOKEN,
+    apiKey: GEODB_API_KEY,
   })
 
   t.pass('connecting')
@@ -57,8 +59,8 @@ test('geodb publish', async t => {
         t.deepEqual(data.payload, message, 'should receive the message')
 
         t.end()
-      }
-    )
+      },
+    ),
   )
 
   t.pass('subscribed')
@@ -74,10 +76,12 @@ test('geodb publish', async t => {
           annotation: 'Versailles',
         },
       },
-      (err, data, metadata) => (err ? reject(err) : resolve())
-    )
+      (err, data, metadata) => (err ? reject(err) : resolve()),
+    ),
   )
 })
+
+const wait = delay => new Promise(resolve => setTimeout(resolve, delay))
 
 test('geodb disconnect', async t => {
   geodb.on('error', evt => t.fail('should not have an error'))
@@ -88,5 +92,15 @@ test('geodb disconnect', async t => {
     t.end()
   })
 
+  t.assert(
+    geodb.connectionState()['open?'],
+    'should be connected at this point',
+  )
+
   geodb.disconnect()
+
+  t.assert(
+    !geodb.connectionState()['open?'],
+    'should be disconnected after disconnection',
+  )
 })
