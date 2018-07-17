@@ -24,8 +24,8 @@ test('geodb connect', t => {
   t.pass('init')
 
   geodb.connect({
-    userToken: key.USER_TOKEN,
-    apiKey: key.API_KEY,
+    userToken: key.GEODB_USER_TOKEN,
+    apiKey: key.GEODB_API_KEY,
   })
 
   t.pass('connecting')

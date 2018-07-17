@@ -1,6 +1,5 @@
 const path = require('path')
-
-const production = process.env.NODE_ENV === 'production'
+const webpack = require('webpack')
 
 module.exports = {
   entry: {
@@ -12,7 +11,7 @@ module.exports = {
 
   output: {
     path: path.join(__dirname, './dist'),
-    filename: production ? '[name]-[hash:8].js' : '[name].js',
+    filename: '[name].js',
     publicPath: '/',
   },
 
@@ -34,12 +33,19 @@ module.exports = {
         use: [
           {
             loader: 'file-loader',
-            options: {name: '[name].[ext]'},
+            options: { name: '[name].[ext]' },
           },
         ],
       },
     ],
   },
 
-  devtool: production ? 'source-map' : false,
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.GEODB_USER_TOKEN': `"${process.env.GEODB_USER_TOKEN}"`,
+      'process.env.GEODB_API_KEY': `"${process.env.GEODB_API_KEY}"`,
+    }),
+  ],
+
+  devtool: false,
 }
