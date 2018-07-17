@@ -1,85 +1,92 @@
-const geodb = require('geodb').api;
-const websocket = require('websocket');
+const test_ = require('tape')
+// as browser-tap is weirdly bundled, ensure compatibility between node and browser
+const test = test_.default || test_
 
-const USER_TOKEN=process.env.GEODB_USER_TOKEN;
-const API_KEY=process.env.GEODB_API_KEY;
+const geodb = require('geodb').api
+const key = require('./key')
+require('websocket')
 
-console.log('Hello GeoDB');
+test('geodb connect', t => {
+  geodb.init({
+    host: 'geodb.io',
+    type: 'ws',
+    protocol: 'https',
+  })
 
-if (!USER_TOKEN) {
-  console.log('Missing USER_TOKEN');
-}
+  geodb.on('error', evt => t.fail('should not have an error'))
 
-if (!API_KEY) {
-  console.log('Missing API_KEY');
-}
+  geodb.on('connect', evt => {
+    t.pass('connected')
 
-geodb.init({host: 'geodb.io',
-            type: "ws",
-            protocol: "https"});
+    t.end()
+  })
 
-const publish = function publish() {
-  console.log('Publishing!');
+  t.pass('init')
 
-  geodb.publish({
-    "payload": {
-      "msg": "anything goes in the payload"
-    },
-    "channel": "#test",
-    "location": {
-      "lon": 2.1204,
-      "lat": 48.8049,
-      "annotation": "Versailles"
-    }
-  }, (err, data, metadata) => {
-    console.log("published", err, data, metadata);
-  });
-};
+  geodb.connect({
+    userToken: key.USER_TOKEN,
+    apiKey: key.API_KEY,
+  })
 
-const subscribe = function subscribe() {
-  return geodb.subscribe({
-    "channel": "#test",
-    "location": {
-      "radius": "50km",
-      "lon": 2.3522,
-      "lat": 48.8566,
-      "annotation": "Paris"
-    }
-  }, (err, data, metadata) => {
-    console.log("data received in Paris#test", err, data, metadata);
-  });
-};
+  t.pass('connecting')
+})
 
-geodb.on('connect', (evt) => {
-  console.log('Connected');
-
-  if(evt[1].auth.status === 'authenticated') {
-    console.log('Publishing regularly some data');
-    setInterval(publish, 2500);
-    subscribe();
-  } else {
-    console.log('Check env variables');
+test('geodb publish', async t => {
+  const message = {
+    m: 'hello',
   }
-});
 
-geodb.on('error', (evt) => {
-  console.log('error', evt);
-});
+  geodb.on('error', evt => t.fail('should not have an error'))
 
-geodb.on('disconnect', (evt) => {
-  console.log('disconnect', evt);
-});
+  await new Promise((resolve, reject) =>
+    geodb.subscribe(
+      {
+        channel: '#test',
+        location: {
+          radius: '50km',
+          lon: 2.3522,
+          lat: 48.8566,
+          annotation: 'Paris',
+        },
+      },
+      (err, data, metadata) => {
+        if (err) return reject(err)
 
-geodb.connect({userToken: USER_TOKEN,
-               apiKey: API_KEY});
-console.log('Connecting...');
+        if (data[0] === 'subscribe-ok') return resolve()
 
+        t.deepEqual(data.payload, message, 'should receive the message')
 
-const describe = function describe () {
-  console.log('connectionState', geodb.connectionState());
-  console.log('authStatus', geodb.authStatus());
-  console.log('listSubscriptions', geodb.listSubscriptions());
-  console.log('listHandlers', geodb.listHandlers());
-};
+        t.end()
+      }
+    )
+  )
 
-setInterval(describe, 5000);
+  t.pass('subscribed')
+
+  await new Promise((resolve, reject) =>
+    geodb.publish(
+      {
+        payload: message,
+        channel: '#test',
+        location: {
+          lon: 2.1204,
+          lat: 48.8049,
+          annotation: 'Versailles',
+        },
+      },
+      (err, data, metadata) => (err ? reject(err) : resolve())
+    )
+  )
+})
+
+test('geodb disconnect', async t => {
+  geodb.on('error', evt => t.fail('should not have an error'))
+
+  geodb.on('disconnect', evt => {
+    t.pass('disconnected')
+
+    t.end()
+  })
+
+  geodb.disconnect()
+})

@@ -1,39 +1,25 @@
 {
-  "name": "geodb-nodejs-sample",
+  "name": "geodb-js-sample",
   "version": "1.0.0",
   "description": "How to use the geodb SDK",
   "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "test": "jest"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nha/geodb-nodejs-sample.git"
-  },
   "dependencies": {
     "geodb": "https://geodb.io/vendors/geodb/js/geodb.tgz"
   },
-  "keywords": [
-    "geodb",
-    "geo",
-    "publish",
-    "subscribe",
-    "socket",
-    "pubsub",
-    "geodb.io",
-    "geolocation",
-    "push",
-    "pull",
-    "socket"
-  ],
-  "author": "Nicolas Ha",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/nha/geodb-nodejs-sample/issues"
-  },
-  "homepage": "https://github.com/nha/geodb-nodejs-sample#readme",
   "devDependencies": {
-    "jest": "^23.4.0"
+    "browser-tap": "0.0.1",
+    "file-loader": "1.1.11",
+    "tap-browser": "0.0.1",
+    "tap-spec": "5.0.0",
+    "tape": "4.9.1",
+    "webpack": "4.16.1",
+    "webpack-cli": "3.0.8",
+    "webpack-dev-server": "3.1.4"
+  },
+  "license": "MIT",
+  "scripts": {
+    "start":
+      "webpack-dev-server --mode development --config ./webpack.config.js",
+    "test": "node index.js | tap-spec"
   }
 }

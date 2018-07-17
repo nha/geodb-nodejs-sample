@@ -1,12 +1,11 @@
-# geodb-nodejs-sample
+# geodb-js-sample
 
-How to GeoDB in NodeJS
+How to GeoDB in JS with webpack
 
-Usage
-Export you Api Key, and User Token, found in https://geodb.io/dashboard/security
+# Usage
 
-```sh
-export GEODB_USER_TOKEN="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-export GEODB_API_KEY="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-npm start
-```
+Edit the file key with your credential
+
+run `npm run start`
+
+visit http://localhost:8080, open the console
