@@ -19,7 +19,7 @@ host: GEODB_HOST,
 
 console.log('Connecting with ', JSON.stringify(opts, null, 2));
 
-test('geodb connect', t => {
+test('geodb connect', {timeout: 1000}, t => {
   geodb.init(opts)
 
   geodb.on('error', evt => t.fail('should not have an error'))
@@ -40,7 +40,7 @@ test('geodb connect', t => {
   t.pass('connecting')
 })
 
-test('geodb publish', async t => {
+test('geodb publish', {timeout: 1000}, async t => {
   const message = {
     m: 'hello',
   }
@@ -90,7 +90,7 @@ test('geodb publish', async t => {
 
 const wait = delay => new Promise(resolve => setTimeout(resolve, delay))
 
-test('geodb disconnect', async t => {
+test('geodb disconnect', {timeout: 1000},  async t => {
   geodb.on('error', evt => t.fail('should not have an error'))
 
   geodb.on('disconnect', evt => {
