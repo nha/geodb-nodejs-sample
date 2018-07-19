@@ -13,9 +13,9 @@ const GEODB_TYPE = process.env.GEODB_TYPE || 'ws';
 
 test('geodb connect', t => {
   geodb.init({
-    host: GEODB_HOST,
-    type: GEODB_TYPE,
-    protocol: GEODB_PROTOCOL,
+    host: 'geodb.io',
+    type: 'ws',
+    protocol: 'https',
   })
 
   geodb.on('error', evt => t.fail('should not have an error'))
