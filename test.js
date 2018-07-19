@@ -7,12 +7,15 @@ require('websocket')
 
 const GEODB_USER_TOKEN = process.env.GEODB_USER_TOKEN
 const GEODB_API_KEY = process.env.GEODB_API_KEY
+const GEODB_HOST = process.env.GEODB_HOST || 'geodb.io';
+const GEODB_PROTOCOL = process.env.GEODB_PROTOCOL || 'http';
+const GEODB_TYPE = process.env.GEODB_TYPE || 'ws';
 
 test('geodb connect', t => {
   geodb.init({
-    host: 'geodb.io',
-    type: 'ws',
-    protocol: 'https',
+    host: GEODB_HOST,
+    type: GEODB_TYPE,
+    protocol: GEODB_PROTOCOL,
   })
 
   geodb.on('error', evt => t.fail('should not have an error'))
