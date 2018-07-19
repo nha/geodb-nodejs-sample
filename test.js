@@ -12,9 +12,9 @@ const GEODB_PROTOCOL = process.env.GEODB_PROTOCOL || 'https';
 const GEODB_TYPE = process.env.GEODB_TYPE || 'ws';
 
 const opts = {
-        host: GEODB_HOST,
-	type: GEODB_TYPE,
-	protocol: GEODB_PROTOCOL
+host: GEODB_HOST,
+      type: GEODB_TYPE,
+      protocol: GEODB_PROTOCOL
 };
 
 console.log('Connecting with ', JSON.stringify(opts, null, 2));
