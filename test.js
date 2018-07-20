@@ -11,6 +11,23 @@ const GEODB_HOST = process.env.GEODB_HOST || 'geodb.io';
 const GEODB_PROTOCOL = process.env.GEODB_PROTOCOL || 'https';
 const GEODB_TYPE = process.env.GEODB_TYPE || 'ws';
 
+test('test setup', t => {
+
+  if(!GEODB_USER_TOKEN) {
+    t.fail('missing user token');
+  } else {
+    t.pass('user token');
+  }
+
+  if(!GEODB_API_KEY) {
+    t.fail('missing api key');
+  } else {
+    t.pass('api key');
+  }
+
+  t.end()
+});
+
 const opts = {
 host: GEODB_HOST,
       type: GEODB_TYPE,
