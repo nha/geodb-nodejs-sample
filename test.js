@@ -27,6 +27,11 @@ test('geodb connect', {timeout: 2000}, t => {
   geodb.on('connect', evt => {
     t.pass('connected')
 
+    if(evt[1].auth.status === 'authenticated') {
+      t.pass('authenticated');
+    } else {
+      t.fail('not authenticated');
+    }
     t.end()
   })
 
