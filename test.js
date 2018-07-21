@@ -2,7 +2,7 @@ const test_ = require('tape')
 // as browser-tap is weirdly bundled, ensure compatibility between node and browser
 const test = test_.default || test_
 
-const geodb = require('geodb').api
+const geoInst = require('geodb').inst
 require('websocket')
 
 const GEODB_USER_TOKEN = process.env.GEODB_USER_TOKEN
@@ -29,15 +29,16 @@ test('test setup', t => {
 });
 
 const opts = {
-host: GEODB_HOST,
+      host: GEODB_HOST,
       type: GEODB_TYPE,
       protocol: GEODB_PROTOCOL
 };
 
 console.log('Connecting with ', JSON.stringify(opts, null, 2));
 
+const geodb = geoInst.make(opts);
+
 test('geodb connect', {timeout: 2000}, t => {
-  geodb.init(opts)
 
   geodb.on('error', evt => t.fail('should not have an error'))
 
