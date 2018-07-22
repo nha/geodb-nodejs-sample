@@ -66,6 +66,7 @@ test('geodb connect', {timeout: 2000}, t => {
 test('geodb publish', {timeout: 4000}, async t => {
   const message = {
     m: 'hello',
+    d: new Date()
   }
 
   geodb.on('error', evt => t.fail('should not have an error'))
