@@ -137,5 +137,5 @@ test('geodb disconnect', {timeout: 2000},  async t => {
 
   // I feel like this is cheating :{
   t.end()
-  if (typeof process !== 'undefined') process.exit()
+  if (typeof process.exit !== 'undefined') process.exit()
 })
