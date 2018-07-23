@@ -1,4 +1,4 @@
-const geodb = require('geodb').api
+const geoInst = require('geodb').inst
 const websocket = require('websocket')
 
 const USER_TOKEN = process.env.GEODB_USER_TOKEN
@@ -14,7 +14,7 @@ if (!API_KEY) {
   console.log('Missing API_KEY')
 }
 
-geodb.init({
+const geodb = geoInst.make({
   host: 'geodb.io',
   type: 'ws',
   protocol: 'https',
