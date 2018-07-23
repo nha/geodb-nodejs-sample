@@ -62,7 +62,7 @@ test('geodb connect', {timeout: 2000}, t => {
   t.pass('connecting')
 })
 
-test('geodb publish', {timeout: 2000}, async t => {
+test('geodb publish', {timeout: 4000}, async t => {
   const message = {
     m: 'hello',
   }
