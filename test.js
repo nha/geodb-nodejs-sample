@@ -10,6 +10,7 @@ const GEODB_API_KEY = process.env.GEODB_API_KEY
 const GEODB_HOST = process.env.GEODB_HOST || 'geodb.io';
 const GEODB_PROTOCOL = process.env.GEODB_PROTOCOL || 'https';
 const GEODB_TYPE = process.env.GEODB_TYPE || 'ws';
+const GEODB_TIMEOUT = process.env.GEODB_TIMEOUT || 10000;
 
 test('test setup', t => {
 
@@ -38,7 +39,7 @@ console.log('Connecting with ', JSON.stringify(opts, null, 2));
 
 const geodb = geoInst.make(opts);
 
-test('geodb connect', {timeout: 2000}, t => {
+test('geodb connect', {timeout: GEODB_TIMEOUT}, t => {
 
   geodb.on('error', evt => t.fail('should not have an error'))
 
@@ -63,7 +64,7 @@ test('geodb connect', {timeout: 2000}, t => {
   t.pass('connecting')
 })
 
-test('geodb publish', {timeout: 4000}, async t => {
+test('geodb publish', {timeout: GEODB_TIMEOUT}, async t => {
   const message = {
     m: 'hello',
     d: new Date()
@@ -114,7 +115,7 @@ test('geodb publish', {timeout: 4000}, async t => {
 
 const wait = delay => new Promise(resolve => setTimeout(resolve, delay))
 
-test('geodb disconnect', {timeout: 2000},  async t => {
+test('geodb disconnect', {timeout: GEODB_TIMEOUT},  async t => {
   geodb.on('error', evt => t.fail('should not have an error'))
 
   geodb.on('disconnect', evt => {
