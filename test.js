@@ -35,6 +35,8 @@ const opts = {
       protocol: GEODB_PROTOCOL
 };
 
+const channel = "#test-node-" + new Date().getTime();
+
 console.log('Connecting with ', JSON.stringify(opts, null, 2));
 
 const geodb = geoInst.make(opts);
@@ -75,7 +77,7 @@ test('geodb publish', {timeout: GEODB_TIMEOUT}, async t => {
   await new Promise((resolve, reject) =>
     geodb.subscribe(
       {
-        channel: '#test',
+        channel: channel,
         location: {
           radius: '50km',
           lon: 2.3522,
@@ -101,7 +103,7 @@ test('geodb publish', {timeout: GEODB_TIMEOUT}, async t => {
     geodb.publish(
       {
         payload: message,
-        channel: '#test',
+        channel: channel,
         location: {
           lon: 2.1204,
           lat: 48.8049,
