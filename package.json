@@ -4,7 +4,7 @@
   "description": "How to use the geodb SDK",
   "main": "index.js",
   "dependencies": {
-    "geodb": "https://geodb.io/vendors/geodb/js/geodb.tgz"
+    "geodb": "0.0.1"
   },
   "devDependencies": {
     "browser-tap": "0.0.1",
@@ -18,8 +18,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "test:browser":
-      "webpack-dev-server --mode development --config ./webpack.config.js",
+    "test:browser": "webpack-dev-server --mode development --config ./webpack.config.js",
     "test": "node test.js | tap-spec"
   }
 }

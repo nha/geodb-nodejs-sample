@@ -18,9 +18,9 @@ jobs:
     steps:
       - checkout
 
-      - run: yarn install
+      - run: ./scripts/pre_test.sh
 
-      - run: yarn test
+      - run: ./scripts/test.sh
 
 workflows:
   version: 2
