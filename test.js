@@ -2,6 +2,11 @@ const test_ = require('tape')
 // as browser-tap is weirdly bundled, ensure compatibility between node and browser
 const test = test_.default || test_
 
+const api =  require('geodb').api
+console.log('Testing version', {version: api.version,
+                                commitVersion: api.commitVersion,
+                                buildNum: api.buildNum})
+
 const geoInst = require('geodb').inst
 require('websocket')
 
