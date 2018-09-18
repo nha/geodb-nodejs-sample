@@ -93,7 +93,7 @@ test('geodb publish', {timeout: GEODB_TIMEOUT}, async t => {
       (err, data, metadata) => {
         if (err) return reject(err)
 
-        if (data[0] === 'subscribe-ok') return resolve()
+        if (data[0] === 'subscribeOk') return resolve()
 
         t.deepEqual(data.payload, message, 'should receive the message')
 
