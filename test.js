@@ -91,6 +91,7 @@ test('geodb publish', {timeout: GEODB_TIMEOUT}, async t => {
         },
       },
       (err, data, metadata) => {
+        console.log("SUB", err, data, metadata);
         if (err) return reject(err)
 
         if (data[0] === 'subscribeOk') return resolve()
@@ -99,7 +100,12 @@ test('geodb publish', {timeout: GEODB_TIMEOUT}, async t => {
 
         t.end()
       },
-    ),
+    ).then((data) => {
+      console.log('subscribe data', data);
+    })
+    .catch((err) => {
+     console.log('sub catch err', err);
+    })
   )
 
   t.pass('subscribed')
@@ -116,7 +122,12 @@ test('geodb publish', {timeout: GEODB_TIMEOUT}, async t => {
         },
       },
       (err, data, metadata) => (err ? reject(err) : resolve()),
-    ),
+    ).then((data) => {
+      console.log('Publish then', data);
+    })
+    .catch((err) => {
+      console.log('publish catch err', err);
+    })
   )
 })
 
