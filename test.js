@@ -77,6 +77,7 @@ test('geodb publish', {timeout: GEODB_TIMEOUT}, async t => {
     d: new Date()
   }
 
+  console.log('onError set');
   geodb.on('error', evt => t.fail('should not have an error'))
 
   await new Promise((resolve, reject) =>
@@ -110,7 +111,9 @@ test('geodb publish', {timeout: GEODB_TIMEOUT}, async t => {
 
   t.pass('subscribed')
 
-  await new Promise((resolve, reject) =>
+  console.log('PUBLISHING');
+  await new Promise((resolve, reject) => {
+    console.log('CALLING PUBLSH');
     geodb.publish(
       {
         payload: message,
@@ -121,13 +124,17 @@ test('geodb publish', {timeout: GEODB_TIMEOUT}, async t => {
           annotation: 'Versailles',
         },
       },
-      (err, data, metadata) => (err ? reject(err) : resolve()),
+      (err, data, metadata) => {
+       console.log('publish CB', err, data, metadata);
+       (err ? reject(err) : resolve())
+      },
     ).then((data) => {
       console.log('Publish then', data);
     })
     .catch((err) => {
       console.log('publish catch err', err);
     })
+   }
   )
 })
 
