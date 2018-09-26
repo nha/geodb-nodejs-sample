@@ -4,7 +4,7 @@
   "description": "How to use the geodb SDK",
   "main": "index.js",
   "dependencies": {
-    "geodb": "0.0.3"
+    "geodb": "0.0.6"
   },
   "devDependencies": {
     "browser-tap": "0.0.1",
