@@ -71,7 +71,7 @@ test('geodb connect', {timeout: GEODB_TIMEOUT}, t => {
   t.pass('connecting')
 })
 
-test('geodb subscribe', {timeout: GEODB_TIMEOUT}, async t => {
+test('geodb pubsub', {timeout: GEODB_TIMEOUT}, async t => {
   const message = {
     m: 'hello',
     d: new Date()
@@ -99,20 +99,22 @@ test('geodb subscribe', {timeout: GEODB_TIMEOUT}, async t => {
   ).then((data) => t.pass('subscribed'))
    .catch((err) => t.fail('subscribe failed'))
 
-  await new Promise((resolve, reject) =>
-    geodb.publish(
-      {
-        payload: message,
-        channel: channel,
-        location: {
-          lon: 2.1204,
-          lat: 48.8049,
-          annotation: 'Versailles',
-        },
+  geodb.publish(
+    {
+      payload: message,
+      channel: channel,
+      location: {
+        lon: 2.1204,
+        lat: 48.8049,
+        annotation: 'Versailles',
       },
-      (err, data, metadata) => (err ? reject(err) : resolve()),
-    ),
-  )
+    },
+    (err, data, metadata) => {
+      if (err) t.fail('pubslish cb err')
+      if(data.publishedCount === 1) t.pass('published to 1')
+    },
+  ).then((data) => t.pass('published'))
+  .catch((err) => t.fail('publish failed'))
 })
 
 const wait = delay => new Promise(resolve => setTimeout(resolve, delay))
