@@ -16,6 +16,24 @@ Run:
 `node index.js`
 
 
+# Multiple consumers
+
+In a terminal:
+```sh
+ export GEODB_DEMO_ROLE=PRODUCER
+ export GEODB_DEMO_CHANNEL=sometestchannel
+ node index.js
+```
+
+Then do the same in another terminal, but this time launch a new consumer.
+Repeat this as much as you want.
+
+```sh
+ export GEODB_DEMO_ROLE=CONSUMER
+ export GEODB_DEMO_CHANNEL=sometestchannel
+ node index.js
+```
+
 # Tests
 
 run `npm run test:browser` visit http://localhost:8083, open the console
