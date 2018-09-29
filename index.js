@@ -20,6 +20,8 @@ const geodb = geoInst.make({
   protocol: 'https',
 })
 
+const channel = "#test-node-" + new Date().getTime();
+
 const publish = function publish() {
   console.log('Publishing!')
 
@@ -28,7 +30,7 @@ const publish = function publish() {
       payload: {
         msg: 'anything goes in the payload',
       },
-      channel: '#test',
+      channel: channel,
       location: {
         lon: 2.1204,
         lat: 48.8049,
@@ -38,13 +40,14 @@ const publish = function publish() {
     (err, data, metadata) => {
       console.log('published', err, data, metadata)
     },
-  )
+  ).then((data) => console.log('publish promise success', data))
+  .catch((err) => console.log('publish promise err', err));
 }
 
 const subscribe = function subscribe() {
   return geodb.subscribe(
     {
-      channel: '#test',
+      channel: channel,
       location: {
         radius: '50km',
         lon: 2.3522,
@@ -58,16 +61,14 @@ const subscribe = function subscribe() {
   )
 }
 
-geodb.on('connect', evt => {
-  console.log('Connected')
-
-  if (evt[1].auth.status === 'authenticated') {
-    console.log('Publishing regularly some data')
-    // setTimeout(publish, 2500)
-    subscribe()
-  } else {
-    console.log('Check env variables')
-  }
+geodb.on('ready', evt => {
+  console.log('Ready', evt)
+  // subscribe
+  subscribe()
+    .then((data) => console.log('subscribe promise', data))
+    .catch((err) => console.log('subscribe promise err', err));
+  // publish to it once every 2.5 secs
+  setInterval(publish, 2500)
 })
 
 geodb.on('error', evt => {
@@ -95,6 +96,6 @@ const describe = function describe() {
 // setInterval(describe, 5000);
 
 setTimeout(() => {
-  console.log('Disconnecting!')
+  console.log('Disconnecting after 40 secs')
   geodb.disconnect()
-}, 4000)
+}, 40000)
