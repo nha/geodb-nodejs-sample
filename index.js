@@ -40,7 +40,8 @@ const publish = function publish() {
     (err, data, metadata) => {
       console.log('published', err, data, metadata)
     },
-  )
+  ).then((data) => console.log('publish promise success', data))
+  .catch((err) => console.log('publish promise err', err));
 }
 
 const subscribe = function subscribe() {
@@ -64,6 +65,8 @@ geodb.on('ready', evt => {
   console.log('Ready', evt)
   // subscribe
   subscribe()
+    .then((data) => console.log('subscribe promise', data))
+    .catch((err) => console.log('subscribe promise err', err));
   // publish to it once every 2.5 secs
   setInterval(publish, 2500)
 })
