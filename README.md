@@ -11,8 +11,13 @@ export GEODB_USER_TOKEN="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 export GEODB_API_KEY="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 ```
 
-run `npm run start`
+Run:
 
-visit http://localhost:8080, open the console
+`node index.js`
+
+
+# Tests
+
+run `npm run test:browser` visit http://localhost:8083, open the console
 
 alternatively run `npm run test` to run the same test in node
