@@ -20,15 +20,19 @@ const geodb = geoInst.make({
   protocol: 'https',
 })
 
-const channel = "#test-node-" + new Date().getTime();
+const channel = process.env.GEODB_DEMO_CHANNEL || "#test-node-" + new Date().getTime();
 
+var pubId = 0;
 const publish = function publish() {
   console.log('Publishing!')
+
+  pubId++;
 
   geodb.publish(
     {
       payload: {
         msg: 'anything goes in the payload',
+        pubSessionCount: pubId
       },
       channel: channel,
       location: {
@@ -63,12 +67,28 @@ const subscribe = function subscribe() {
 
 geodb.on('ready', evt => {
   console.log('Ready', evt)
-  // subscribe
-  subscribe()
-    .then((data) => console.log('subscribe promise', data))
-    .catch((err) => console.log('subscribe promise err', err));
-  // publish to it once every 2.5 secs
-  setInterval(publish, 2500)
+
+
+  if (process.env.GEODB_DEMO_ROLE === 'PRODUCER') {
+    console.log('Publish only!')
+
+    setInterval(publish, 2500)
+  } else if (process.env.GEODB_DEMO_ROLE === 'CONSUMER') {
+    console.log('Consume only!')
+
+    subscribe()
+      .then((data) => console.log('subscribe promise', data))
+      .catch((err) => console.log('subscribe promise err', err));
+  } else {
+    // both
+    // subscribe ...
+    console.log('Publish and subscribe')
+    subscribe()
+      .then((data) => console.log('subscribe promise', data))
+      .catch((err) => console.log('subscribe promise err', err));
+    // ...and publish to it once every 2.5 secs
+    setInterval(publish, 2500)
+  }
 })
 
 geodb.on('error', evt => {
@@ -94,8 +114,8 @@ const describe = function describe() {
 }
 
 // setInterval(describe, 5000);
-
-setTimeout(() => {
-  console.log('Disconnecting after 40 secs')
-  geodb.disconnect()
-}, 40000)
+//
+// setTimeout(() => {
+//   console.log('Disconnecting after 40 secs')
+//   geodb.disconnect()
+// }, 40000)
