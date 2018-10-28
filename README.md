@@ -39,3 +39,7 @@ Repeat this as much as you want.
 run `npm run test:browser` visit http://localhost:8083, open the console
 
 alternatively run `npm run test` to run the same test in node
+
+# Questions/support
+
+Feel free to [get in touch](https://geodb.io/doc/latest/get_help.html) with us!
