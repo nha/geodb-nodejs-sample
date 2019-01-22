@@ -1,4 +1,4 @@
-const geoInst = require('geodb').inst
+const geoInst = require('geodb').create
 const websocket = require('websocket')
 
 const USER_TOKEN = process.env.GEODB_USER_TOKEN
