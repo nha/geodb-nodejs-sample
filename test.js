@@ -7,7 +7,8 @@ console.log('Testing version', {version: api.version,
                                 commitVersion: api.commitVersion,
                                 buildNum: api.buildNum})
 
-const geoInst = require('geodb').inst
+const geoInst = require('geodb').create
+
 require('websocket')
 
 const GEODB_USER_TOKEN = process.env.GEODB_USER_TOKEN
@@ -18,6 +19,11 @@ const GEODB_TYPE = process.env.GEODB_TYPE || 'ws';
 const GEODB_TIMEOUT = process.env.GEODB_TIMEOUT || 10000;
 
 test('test setup', t => {
+
+  process.on('unhandledRejection', error => {
+    console.log('unhandledRejection', error.message);
+    t.fail('unhandledRejection')
+  });
 
   if(!GEODB_USER_TOKEN) {
     t.fail('missing user token');
@@ -48,12 +54,12 @@ const geodb = geoInst.make(opts);
 
 test('geodb connect', {timeout: GEODB_TIMEOUT}, t => {
 
-  geodb.on('error', evt => t.fail('should not have an error'))
+  geodb.on('error', evt => t.fail('should not have an error', evt))
 
-  geodb.on('connect', evt => {
-    t.pass('connected')
+  geodb.on('ready', evt => {
+    t.pass('ready')
 
-    if(evt[1].auth.status === 'authenticated') {
+    if(evt.auth.status === 'authenticated') {
       t.pass('authenticated');
     } else {
       t.fail('not authenticated');
@@ -71,15 +77,19 @@ test('geodb connect', {timeout: GEODB_TIMEOUT}, t => {
   t.pass('connecting')
 })
 
+var subscriptionId;
+
 test('geodb pubsub', {timeout: GEODB_TIMEOUT}, async t => {
   const message = {
     m: 'hello',
+    b: true,
+    n: [1.2, null, Infinity],
     d: new Date()
   }
 
   geodb.on('error', evt => t.fail('should not have an error'))
 
-  await geodb.subscribe(
+  const subscriptionRes = await geodb.subscribe(
     {
       channel: channel,
       location: {
@@ -91,15 +101,14 @@ test('geodb pubsub', {timeout: GEODB_TIMEOUT}, async t => {
     },
     (err, data, metadata) => {
       if (err) t.fail('subscribe cb err')
-
       t.deepEqual(data, message, 'should receive the message')
-
       t.end()
     }
-  ).then((data) => t.pass('subscribed'))
-   .catch((err) => t.fail('subscribe failed'))
+  ).catch((err) => t.fail('subscribe failed'))
 
-  geodb.publish(
+  subscriptionId = subscriptionRes.data.id;
+
+  await geodb.publish(
     {
       payload: message,
       channel: channel,
@@ -114,10 +123,31 @@ test('geodb pubsub', {timeout: GEODB_TIMEOUT}, async t => {
       if(data.publishedCount === 1) t.pass('published to 1')
     },
   ).then((data) => t.pass('published'))
-  .catch((err) => t.fail('publish failed'))
+   .catch((err) => t.fail('publish failed'))
+
 })
 
-const wait = delay => new Promise(resolve => setTimeout(resolve, delay))
+test('geodb reader', {timeout: GEODB_TIMEOUT}, async t => {
+
+  const reader = await geodb.reader({subscriptionId: subscriptionId,
+                               startMessageId: "earliest"})
+        .then(reader => {
+          t.pass('create reader')
+          return reader
+        })
+        .catch(err => {
+          t.fail('cannot create reader')
+        });
+
+   await reader.readNext()
+        .then(msg => {
+          t.pass('reader: can read next')
+          t.end()
+        })
+        .catch(err => {
+          t.fail('reader: cannot read next')
+        });
+})
 
 test('geodb disconnect', {timeout: GEODB_TIMEOUT},  async t => {
   geodb.on('error', evt => t.fail('should not have an error'))

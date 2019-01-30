@@ -4,7 +4,7 @@
   "description": "How to use the geodb SDK",
   "main": "index.js",
   "dependencies": {
-    "geodb": "0.0.6"
+    "geodb": "0.1.4"
   },
   "devDependencies": {
     "browser-tap": "0.0.1",
@@ -14,7 +14,7 @@
     "tape": "4.9.1",
     "webpack": "4.16.1",
     "webpack-cli": "3.0.8",
-    "webpack-dev-server": "3.1.4"
+    "webpack-dev-server": "^3.1.14"
   },
   "license": "MIT",
   "scripts": {
