@@ -1,3 +1,4 @@
+bump
 # geodb-js-sample
 
 How to GeoDB in JS with webpack
